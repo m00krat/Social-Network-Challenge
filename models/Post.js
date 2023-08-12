@@ -1,29 +1,20 @@
-const { Schema, model } = require('mongoose');
+const { Schema, model, Types } = require('mongoose');
 
-// Schema to create a course model
-const courseSchema = new Schema(
+const postSchema = new Schema(
   {
-    courseName: {
+    postText: {
       type: String,
       required: true,
+      max_length: 250,
     },
-    inPerson: {
-      type: Boolean,
-      default: true,
-    },
-    startDate: {
+    createdAt: {
       type: Date,
-      default: Date.now(),
+      default: Date.now,
     },
-    endDate: {
-      type: Date,
-      // Sets a default value of 12 weeks from now
-      default: () => new Date(+new Date() + 84 * 24 * 60 * 60 * 1000),
-    },
-    students: [
+    username: [
       {
-        type: Schema.Types.ObjectId,
-        ref: 'Student',
+        type: String,
+        required: true,
       },
     ],
   },
@@ -31,10 +22,9 @@ const courseSchema = new Schema(
     toJSON: {
       virtuals: true,
     },
-    id: false,
   }
 );
 
-const Course = model('course', courseSchema);
+const Post = model('post', postSchema);
 
-module.exports = Course;
+module.exports = Post;

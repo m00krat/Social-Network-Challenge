@@ -35,6 +35,7 @@ module.exports = {
           res.json(user);
         } 
         catch (err) {
+          console.log(err);
           res.status(500).json(err);
         }
       },
@@ -49,7 +50,62 @@ module.exports = {
           res.json({ message: 'User/post deleted' })
         } 
         catch (err) {
+          console.log(err);
           res.status(500).json(err);
         }
       },
-}
+      async updateUser(req, res) {
+        try {
+          const user = await User.findOneAndUpdate(
+            { _id: req.params.id },
+            { $set: req.body },
+            { runValidators: true, new: true }
+          );
+    
+          if (!user) {
+            res.status(404).json({ message: 'ID not found' });
+          }
+          res.json(user);
+        } 
+        catch (err) {
+          console.log(err);
+          res.status(500).json(err);
+        }
+      },
+      async addFriend(req, res) {
+        try {
+          const user = await User.findOneAndUpdate(
+            { _id: req.params.userId },
+            {$addToSet: { friend: req.params.friendId }},
+            { runValidators: true, new: true }
+          );
+    
+          if (!user) {
+            res.status(404).json({ message: 'ID not found' });
+          }
+          res.json(user);
+        } 
+        catch (err) {
+          console.log(err);
+          res.status(500).json(err);
+        }
+      },
+      async deleteFriend(req, res) {
+        try {
+          const user = await User.findOneAndUpdate(
+            { _id: req.params.userId },
+            {$pull: { friend: req.params.friendId }},
+            { runValidators: true, new: true }
+          );
+    
+          if (!user) {
+            res.status(404).json({ message: 'ID not found' });
+          }
+          res.json(user);
+        } 
+        catch (err) {
+          console.log(err);
+          res.status(500).json(err);
+        }
+      }, 
+};
